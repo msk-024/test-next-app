@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 
-export const Header = () => {
+export const Header: React.FC = () => {
   return (
     <header className="bg-slate-700 text-white w">
       <div className="container flex mx-auto p-5 text-xl">

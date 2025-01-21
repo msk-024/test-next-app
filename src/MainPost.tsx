@@ -1,7 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Post } from "./types/Post";
 
-export const MainPost = ({ post }) => {
+interface MainPostProps {
+  post: Post;
+}
+
+export const MainPost: React.FC<MainPostProps> = ({ post }) => {
   return (
     <div className="border border-black mb-4 w-4/5 mx-auto">
       <Link to={`/article/${post.id}`}>

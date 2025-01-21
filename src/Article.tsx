@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// import { posts } from "./post";
-// import { Header } from "./page/Header";
+import { Post } from "./types/Post";
 
 export function Article() {
-  const { id } = useParams();
-  const [article, setArticle] = useState(null);
+  const { id } = useParams<{ id: string }>();
+  // console.log("Article ID:", id);
+  const [article, setArticle] = useState<Post | null>(null);
+
   useEffect(() => {
     const Articles = async () => {
       try {

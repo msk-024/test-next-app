@@ -1,5 +1,13 @@
-// /src/data/posts.js
-export const posts = [
+export interface Post {
+  id: number;
+  title: string;
+  thumbnailUrl: string;
+  createdAt: string;
+  categories: string[];
+  content: string;
+}
+
+export const posts: Post[] = [
   {
     id: 1,
     title: "記事タイトル１",
@@ -7,7 +15,8 @@ export const posts = [
     createdAt: "2023-09-11T09:00:00.000Z",
     categories: ["React", "TypeScript"],
     content: `
-      本文です。本文です。本文です。本文です。本文です。本文です。<br/>本文です。本文です。本文です。本文です。本文です。<br/><br/>本文です。本文です。本文です。本文です。本文です。本文です。本文です。本文です。本文です。<br/><br/><br/>本文です。本文です。本文です。本文です。本文です。本文です。<br/>`,
+      本文です。本文です。本文です。本文です。本文です。本文です。<br/>本文です。本文です。本文です。本文です。本文です。<br/><br/>本文です。本文です。本文です。本文です。本文です。本文です。本文です。本文です。本文です。<br/><br/><br/>本文です。本文です。本文です。本文です。本文です。本文です。<br/>
+    `,
   },
   {
     id: 2,

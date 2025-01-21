@@ -3,74 +3,71 @@ import { API_BASE_URL } from "../../constance";
 import { Label } from "./Label";
 import { Input } from "./Input";
 import { Textarea } from "./Textarea";
-import { Error } from "./Error";
+import { ErrorMessage } from "./ErrorMessage";
 
-export const Form = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [messageError, setMessageError] = useState("");
-
-  //  バリデーション
+export const Form: React.FC = () => {
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const [nameError, setNameError] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+  const [messageError, setMessageError] = useState<string>("");
+  // バリデーション
   const valid = () => {
     let nameError = "";
     let emailError = "";
     let messageError = "";
-
     if (!name) {
       nameError = "お名前は必須です。";
     } else if (name.length > 30) {
       nameError = "お名前は30字以内で入力してください。";
     }
-
     if (!email) {
       emailError = "メールアドレスは必須です。";
     } else if (!email.match(/.+@.+\..+/)) {
       emailError = "メールアドレスの形式が正しくありません。";
     }
-
     if (!message) {
       messageError = "本文は必須です。";
     } else if (message.length > 500) {
       messageError = "本文は500字以内で入力してください。";
     }
-
     setNameError(nameError);
     setEmailError(emailError);
     setMessageError(messageError);
-
     return !nameError && !emailError && !messageError;
   };
-
   // フォームの送信
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!valid()) return;
 
-    await fetch(`${API_BASE_URL}/contacts`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, message }),
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}/contacts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, message }),
+      });
 
-    alert("送信しました。");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
 
-    handleClear();
+      alert("送信しました。");
+      handleClear();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("送信に失敗しました。");
+    }
   };
-
   // クリア
   const handleClear = () => {
     setName("");
     setEmail("");
     setMessage("");
   };
-
   return (
     <div>
       <div className="max-w-[800px] mx-auto py-10">
@@ -85,7 +82,7 @@ export const Form = () => {
                 value={name}
                 onChange={(value) => setName(value)}
               />
-              <Error message={nameError} />
+              <ErrorMessage message={nameError} />
             </div>
           </div>
           <div className="flex justify-between items-center mb-6">
@@ -97,7 +94,7 @@ export const Form = () => {
                 value={email}
                 onChange={(value) => setEmail(value)}
               />
-              <Error message={emailError} />
+              <ErrorMessage message={emailError} />
             </div>
           </div>
           <div className="flex justify-between items-center mb-6">
@@ -108,7 +105,7 @@ export const Form = () => {
                 value={message}
                 onChange={(value) => setMessage(value)}
               />
-              <Error message={messageError} />
+              <ErrorMessage message={messageError} />
             </div>
           </div>
           <div className="flex justify-center mt-10">
