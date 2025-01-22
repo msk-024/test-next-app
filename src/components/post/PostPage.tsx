@@ -7,6 +7,21 @@ import { Post, posts } from "@/src/types/Post";
 export const PostPage: React.FC = () => {
   const [postPages, setPostPages] = useState<Post[]>([]);
 
+  // chapter9の記事取得処理
+  // useEffect (()=>{
+  // const fecher =async ()=>{
+  // const res = await fecht ('<https://9samplena9.microcms.io/api/v1/blog-next9>',{
+  // headers: {
+  // 'X-MICROCMS-API-KEY :bvbCuz2LrHV23AsfSiP0DArHMeiNhxoH2Wo4',
+  // },
+  // })
+  // const{contents}=await res.json()
+  // setPosts(contents)
+  // }
+  // fetcher()
+  // },[])
+  // chapter9の記事取得処理ここまで
+
   useEffect(() => {
     setPostPages(posts);
   }, []);
