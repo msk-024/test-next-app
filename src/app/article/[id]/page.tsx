@@ -3,8 +3,9 @@ import Image from "next/image";
 
 // Articleコンポーネントを非同期にする
 export default async function Article({ params }: { params: { id: string } }) {
+  const{id} = await params;
   const res = await fetch(
-    `https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/${params.id}`
+    `https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/${id}`
   );
   const data = await res.json();
 
