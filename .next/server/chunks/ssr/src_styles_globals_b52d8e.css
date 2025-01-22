@@ -389,6 +389,10 @@ img, video {
   display: flex;
 }
 
+.contents {
+  display: contents;
+}
+
 .w-4\/5 {
   width: 80%;
 }
