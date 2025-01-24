@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { MainPost } from "@/src/app/post/MainPost";
+import { MainPost } from "@/src/app/_components/MainPost";
 import { PageTitle } from "@/src/app/_components/PageTitle";
 import { Post, posts } from "@/src/app/_types/Post";
 
