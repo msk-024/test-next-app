@@ -1,6 +1,5 @@
-// "use client";
 import React from "react";
-import { PostPage } from "@/src/components/post/PostPage";
+import { PostPage } from "@/src/app/post/PostPage";
 
 export default function HomePage() {
   return (
