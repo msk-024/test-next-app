@@ -178,6 +178,20 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$types$2f$Post$2e$ts__
 ;
 const PostPage = ()=>{
     const [postPages, setPostPages] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    // chapter9の記事取得処理
+    // useEffect (()=>{
+    // const fecher =async ()=>{
+    // const res = await fecht ('<https://9samplena9.microcms.io/api/v1/blog-next9>',{
+    // headers: {
+    // 'X-MICROCMS-API-KEY :bvbCuz2LrHV23AsfSiP0DArHMeiNhxoH2Wo4',
+    // },
+    // })
+    // const{contents}=await res.json()
+    // setPosts(contents)
+    // }
+    // fetcher()
+    // },[])
+    // chapter9の記事取得処理ここまで
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         setPostPages(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$types$2f$Post$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["posts"]);
     }, []);
@@ -188,20 +202,20 @@ const PostPage = ()=>{
                 ttl: "記事一覧"
             }, void 0, false, {
                 fileName: "[project]/src/components/post/PostPage.tsx",
-                lineNumber: 16,
+                lineNumber: 31,
                 columnNumber: 7
             }, this),
             postPages.map((postPage)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$post$2f$MainPost$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["MainPost"], {
                     post: postPage
                 }, postPage.id, false, {
                     fileName: "[project]/src/components/post/PostPage.tsx",
-                    lineNumber: 18,
+                    lineNumber: 33,
                     columnNumber: 9
                 }, this))
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/post/PostPage.tsx",
-        lineNumber: 15,
+        lineNumber: 30,
         columnNumber: 5
     }, this);
 };
