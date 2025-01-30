@@ -15,7 +15,8 @@ export const PostPage: React.FC = () => {
         "https://9samplena9.microcms.io/api/v1/blog-next9",
         {
           headers: {
-            "X-MICROCMS-API-KEY": "bvbCuz2LrHV23AsfSiP0DArHMeiNhxoH2Wo4",
+            "X-MICROCMS-API-KEY": process.env
+              .NEXT_PUBLIC_MICROCMS_API_KEY as string,
           },
         }
       );

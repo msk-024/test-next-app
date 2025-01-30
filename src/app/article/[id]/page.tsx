@@ -1,65 +1,81 @@
+"use client";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation"; // useParamsをインポート
 import { MicroCmsPost } from "@/src/app/_types/MicroCmsPost";
 import Image from "next/image";
 
-// Articleコンポーネントを非同期にする →Next.jsでは不要
-export default async function Article({ params }: { params: { id: string } }) {
-  // const { id } = await params;
-  // →Next.jsでは不要
-  const { id } = params;
+export default function Article() {
+  const params = useParams();
+  const id = params?.id as string | undefined;
 
-  // const res = await fetch(
-  //   `https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/${id}`
-  // );
-  // const data = await res.json();
+  const [post, setPost] = useState<MicroCmsPost | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // APIが失敗した場合、ページ全体がクラッシュする可能性あり。これを防ぐために try-catch を追加。
-  let article: MicroCmsPost | null = null;
+  useEffect(() => {
+    const fetcher = async () => {
+      setLoading(true);
+      const res = await fetch(
+        `https://9samplena9.microcms.io/api/v1/blog-next9/${id}`,
+        {
+          headers: {
+            "X-MICROCMS-API-KEY": process.env
+              .NEXT_PUBLIC_MICROCMS_API_KEY as string,
+          },
+        }
+      );
 
-  try {
-    const res = await fetch(
-      `https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/${id}`
-    );
+      const data = await res.json();
 
-    if (!res.ok) {
-      if (res.status === 404) {
-        return <p>記事が見つかりませんでした。</p>;
-      }
-      throw new Error(`HTTP error! Status: ${res.status}`);
-    }
+      // console.log("Fetched data:", data); // データ全体を表示
+      // console.log("Thumbnail:", data.thumbnail); // サムネイル情報を確認
+      // console.log("Thumbnail URL:", data.thumbnail?.url); // URLを確認
 
-    const data = await res.json();
-    article = data.post || null;
-  } catch (error) {
-    console.error("記事取得エラー:", error);
-    return (
-      <p>記事の読み込みに失敗しました。ネットワークを確認してください。</p>
-    );
+      setPost(data);
+      setLoading(false);
+    };
+
+    fetcher();
+  }, [id]);
+
+  if (!id) {
+    return <p className="text-red-500">記事IDが取得できません。</p>;
   }
 
-  if (!article) {
+  if (loading) {
     return <p>記事を読み込んでいます....</p>;
   }
+
+  if (!post) {
+    return <p>記事が見つかりません。</p>;
+  }
+
+  const thumbnailUrl = post.thumbnail?.url;
+  // console.log("Thumbnail URL:", post.thumbnailUrl?.url);
 
   return (
     <div>
       <main>
         <div className="max-w-full w-4/5 mx-auto">
           <div className="w-full my-8">
-            <Image
-              src={article.thumbnailUrl?.url ?? "/default.jpg"}
-              alt={article.title}
-              width={800}
-              height={450}
-              className="w-full"
-              priority // 優先的に読み込むようにする
-            />
+            {thumbnailUrl ? (
+              <Image
+                src={thumbnailUrl}
+                alt={post.title}
+                width={800}
+                height={450}
+                className="w-full"
+                priority
+              />
+            ) : (
+              <div>サムネイルが読み込まれませんでした</div>
+            )}
           </div>
           <div className="flex justify-between">
             <p className="text-xs">
-              {new Date(article.createdAt).toLocaleDateString()}
+              {new Date(post.createdAt).toLocaleDateString()}
             </p>
             <div className="flex">
-              {article.categories.map((category) => (
+              {post.categories.map((category) => (
                 <p
                   key={category.id}
                   className="border border-blue-500 rounded text-blue-500 p-2 ml-1"
@@ -70,8 +86,8 @@ export default async function Article({ params }: { params: { id: string } }) {
             </div>
           </div>
           <div className="my-5">
-            <h2 className="font-medium text-2xl mb-4">{article.title}</h2>
-            <div dangerouslySetInnerHTML={{ __html: article.content }} />
+            <h2 className="font-medium text-2xl mb-4">{post.title}</h2>
+            <div dangerouslySetInnerHTML={{ __html: post.content }} />
           </div>
         </div>
       </main>
