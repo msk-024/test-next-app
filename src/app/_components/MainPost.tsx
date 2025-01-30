@@ -1,9 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import { Post } from "@/src/app/_types/Post";
+// import { Post } from "@/src/app/_types/Post";
+import { MicroCmsPost } from "@/src/app/_types/MicroCmsPost";
 
 interface MainPostProps {
-  post: Post;
+  // post: Post;
+  post: MicroCmsPost;
 }
 
 export const MainPost: React.FC<MainPostProps> = ({ post }) => {
@@ -19,7 +21,7 @@ export const MainPost: React.FC<MainPostProps> = ({ post }) => {
                   key={i}
                   className="border border-blue-500 rounded text-blue-500 p-2 ml-1"
                 >
-                  {category}
+                  {category.name}
                 </p>
               ))}
             </div>
