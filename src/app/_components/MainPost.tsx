@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Post } from "@/src/app/_types/Post";
+import { Post } from "@/app/_types/MicroCmsPost";
 
 interface MainPostProps {
   post: Post;

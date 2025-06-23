@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { Input } from "@/src/app/contact/_components/form/Input";
-import { Textarea } from "@/src/app/contact/_components/form/Textarea";
-import { Label } from "@/src/app/contact/_components/form/Label";
-import { ErrorMessage } from "@/src/app/contact/_components/form/ErrorMessage";
-import { PageTitle } from "@/src/app/_components/PageTitle";
+import { Input } from "@/app/contact/_components/form/Input";
+import { Textarea } from "@/app/contact/_components/form/Textarea";
+import { Label } from "@/app/contact/_components/form/Label";
+import { ErrorMessage } from "@/app/contact/_components/form/ErrorMessage";
+import { PageTitle } from "@/app/_components/PageTitle";
 
 // 環境変数
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
