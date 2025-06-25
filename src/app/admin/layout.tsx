@@ -5,8 +5,8 @@ import "@/app/_styles/globals.css";
 import { Header } from "@/app/_components/Header";
 
 export const metadata: Metadata = {
-  title: "Admin | Next-Blog",
-  description: "管理者用ページ",
+  title: "管理画面 | Next-Blog",
+  description: "ブログの管理者用ページです",
 };
 
 export default function AdminLayout({
@@ -15,11 +15,9 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja">
-      <body>
-        <Header />
-        <main>{children}</main>
-      </body>
-    </html>
+    <>
+      <Header />
+      <main>{children}</main>
+    </>
   );
 }

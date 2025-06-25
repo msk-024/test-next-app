@@ -1,127 +1,108 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Category } from "@/app/_types/AdminPost";
+import { PostForm } from "./_components/PostForm";
+import { PageTitle } from "@/app/_components/PageTitle";
 
-interface Category {
-  id: number;
-  name: string;
-}
+export default function NewPostsPage() {
+  const router = useRouter();
 
-interface Post {
-  id: number;
-  title: string;
-  createdAt: string;
-  postCategories: {
-    category: Category;
-  }[];
-}
-
-const POSTS_PER_PAGE = 10;
-
-export default function AdminPostsPage() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPosts, setTotalPosts] = useState(0);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // APIから投稿一覧をページ単位で取得
-  const fetchPosts = async (page: number) => {
+  // カテゴリー一覧の取得
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/categories`
+        );
+        if (!res.ok) throw new Error("カテゴリー一覧の取得に失敗しました。");
+        const data = await res.json();
+        setCategories(data.categories);
+      } catch (error) {
+        console.error("カテゴリー一覧の取得に失敗しました。", error);
+        alert("投稿一覧の読み込みに失敗しました。");
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const toggleCategory = (id: number) => {
+    if (selectedCategoryIds.includes(id)) {
+      setSelectedCategoryIds(selectedCategoryIds.filter((c) => c !== id));
+    } else {
+      setSelectedCategoryIds([...selectedCategoryIds, id]);
+    }
+  };
+
+  const handleCreate = async () => {
+    // 入力チェック（バリデーション）
+    if (!title.trim()) {
+      setErrorMessage("タイトルを入力してください。");
+      return;
+    }
+    if (!content.trim()) {
+      setErrorMessage("本文を入力してください。");
+      return;
+    }
+    if (selectedCategoryIds.length === 0) {
+      setErrorMessage("カテゴリを1つ以上選択してください。");
+      return;
+    }
+
     setLoading(true);
+    setErrorMessage(""); // エラーリセット
+
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/posts?page=${page}&limit=${POSTS_PER_PAGE}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/posts`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title,
+            content,
+            thumbnailUrl,
+            categories: selectedCategoryIds.map((id) => ({ id })),
+          }),
+        }
       );
-      if (!res.ok) throw new Error("投稿データの取得に失敗しました。");
-      const data = await res.json();
-      setPosts(data.posts);
-      setTotalPosts(data.total);
+
+      if (!res.ok) throw new Error("投稿の作成に失敗しました。");
+      alert("新規投稿を作成しました！");
+      router.push("/admin/posts");
     } catch (error) {
-      console.error(error);
-      alert("投稿一覧の読み込みに失敗しました。");
+      alert((error as Error).message);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchPosts(currentPage);
-  }, [currentPage]);
-
-  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
-
   return (
-    <main className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">投稿一覧</h1>
-      {loading ? (
-        <p>読み込み中...</p>
-      ) : (
-        <>
-          <table className="min-w-full border border-gray-300 rounded-md">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="text-left px-4 py-2 border-b">タイトル</th>
-                <th className="text-left px-4 py-2 border-b">投稿日</th>
-                <th className="text-left px-4 py-2 border-b">カテゴリ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {posts.length === 0 && (
-                <tr>
-                  <td colSpan={3} className="text-center py-4">
-                    投稿がありません
-                  </td>
-                </tr>
-              )}
-              {posts.map((post) => (
-                <tr key={post.id} className="hover:bg-gray-50 cursor-pointer">
-                  <td className="px-4 py-3 border-b">{post.title}</td>
-                  <td className="px-4 py-3 border-b">
-                    {new Date(post.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-4 py-3 border-b">
-                    {post.postCategories
-                      .map((pc) => pc.category.name)
-                      .join(", ")}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* ページネーション */}
-          {totalPages > 1 && (
-            <nav className="flex justify-center mt-6 space-x-2">
-              <button
-                className="px-3 py-1 rounded border disabled:opacity-50"
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((p) => p - 1)}
-              >
-                前へ
-              </button>
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i}
-                  className={`px-3 py-1 rounded border ${
-                    currentPage === i + 1
-                      ? "bg-blue-500 text-white border-blue-500"
-                      : "hover:bg-gray-200"
-                  }`}
-                  onClick={() => setCurrentPage(i + 1)}
-                >
-                  {i + 1}
-                </button>
-              ))}
-              <button
-                className="px-3 py-1 rounded border disabled:opacity-50"
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((p) => p + 1)}
-              >
-                次へ
-              </button>
-            </nav>
-          )}
-        </>
-      )}
-    </main>
+    <div className="p-6 max-w-5xl mx-auto">
+      <PageTitle ttl="新規投稿" />
+      <PostForm
+        title={title}
+        setTitle={setTitle}
+        content={content}
+        setContent={setContent}
+        thumbnailUrl={thumbnailUrl}
+        setThumbnailUrl={setThumbnailUrl}
+        categories={categories}
+        selectedCategoryIds={selectedCategoryIds}
+        toggleCategory={toggleCategory}
+        onSubmit={handleCreate}
+        loading={loading}
+        errorMessage={errorMessage}
+      />
+    </div>
   );
 }

@@ -2,19 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-interface Category {
-  id: number;
-  name: string;
-}
-
-interface Post {
-  id: number;
-  title: string;
-  content: string;
-  thumbnailUrl: string;
-  postCategories: { category: Category }[];
-}
+import { Category, Post } from "@/app/_types/AdminPost";
+import { PageTitle } from "@/app/_components/PageTitle";
+import { PostForm } from "../_components/PostForm";
+import { FormButton } from "../_components/FormButton";
+import { DeleteConfirmModal } from "../_components/DeleteConfirmModal";
 
 interface Props {
   params: { id: string };
@@ -31,49 +23,46 @@ export default function PostEditPage({ params }: Props) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
-  // 投稿とカテゴリ一覧を取得する関数
-  const fetchPostAndCategories = async () => {
-    setLoading(true);
-    try {
-      // 投稿データ取得
-      const postRes = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/posts/${postId}`
-      );
-      if (!postRes.ok) throw new Error("投稿データの取得に失敗しました。");
-      const postData = await postRes.json();
-
-      // カテゴリ一覧取得
-      const categoriesRes = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/categories`
-      );
-      if (!categoriesRes.ok)
-        throw new Error("カテゴリ一覧の取得に失敗しました。");
-      const categoriesData = await categoriesRes.json();
-
-      setPost(postData.posts[0]);
-      setTitle(postData.posts[0].title);
-      setContent(postData.posts[0].content);
-      setThumbnailUrl(postData.posts[0].thumbnailUrl || "");
-      setCategories(categoriesData.categories);
-
-      const selectedIds = postData.posts[0].postCategories.map(
-        (pc: { category: Category }) => pc.category.id
-      );
-      setSelectedCategoryIds(selectedIds);
-    } catch (error) {
-      alert((error as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchPostAndCategories = async () => {
+      setLoading(true);
+      try {
+        const postRes = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/posts/${postId}`
+        );
+        if (!postRes.ok) throw new Error("投稿データの取得に失敗しました。");
+        const postData = await postRes.json();
+
+        const categoriesRes = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/categories`
+        );
+        if (!categoriesRes.ok)
+          throw new Error("カテゴリ一覧の取得に失敗しました。");
+        const categoriesData = await categoriesRes.json();
+
+        setPost(postData.posts[0]);
+        setTitle(postData.posts[0].title);
+        setContent(postData.posts[0].content);
+        setThumbnailUrl(postData.posts[0].thumbnailUrl || "");
+        setCategories(categoriesData.categories);
+
+        const selectedIds = postData.posts[0].postCategories.map(
+          (pc: { category: Category }) => pc.category.id
+        );
+        setSelectedCategoryIds(selectedIds);
+      } catch (error) {
+        alert((error as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPostAndCategories();
   }, [postId]);
 
-  // カテゴリ選択の切り替え
   const toggleCategory = (id: number) => {
     if (selectedCategoryIds.includes(id)) {
       setSelectedCategoryIds(selectedCategoryIds.filter((c) => c !== id));
@@ -82,9 +71,19 @@ export default function PostEditPage({ params }: Props) {
     }
   };
 
-  // 投稿更新処理
   const handleUpdate = async () => {
+    if (!title.trim()) {
+      setErrorMessage("タイトルを入力してください。");
+      return;
+    }
+    if (!content.trim()) {
+      setErrorMessage("本文を入力してください。");
+      return;
+    }
+
     setLoading(true);
+    setErrorMessage("");
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/posts/${postId}`,
@@ -109,7 +108,6 @@ export default function PostEditPage({ params }: Props) {
     }
   };
 
-  // 投稿削除処理
   const handleDelete = async () => {
     setLoading(true);
     try {
@@ -139,91 +137,44 @@ export default function PostEditPage({ params }: Props) {
   }
 
   return (
-    <main className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">投稿編集</h1>
-
-      <label className="block mb-2 font-semibold">タイトル</label>
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="w-full p-2 border rounded mb-4"
+    <div className="max-w-4xl mx-auto p-6">
+      <PageTitle ttl="投稿編集" />
+      <PostForm
+        title={title}
+        setTitle={setTitle}
+        content={content}
+        setContent={setContent}
+        thumbnailUrl={thumbnailUrl}
+        setThumbnailUrl={setThumbnailUrl}
+        categories={categories}
+        selectedCategoryIds={selectedCategoryIds}
+        toggleCategory={toggleCategory}
+        onSubmit={handleUpdate}
+        loading={loading}
+        errorMessage={errorMessage}
       />
-
-      <label className="block mb-2 font-semibold">本文</label>
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        rows={8}
-        className="w-full p-2 border rounded mb-4"
+      <FormButton
+        label="保存"
+        onClick={handleUpdate}
+        disabled={loading}
+        color="green"
       />
-
-      <label className="block mb-2 font-semibold">サムネイルURL</label>
-      <input
-        type="text"
-        value={thumbnailUrl}
-        onChange={(e) => setThumbnailUrl(e.target.value)}
-        className="w-full p-2 border rounded mb-4"
+      {/* 削除ボタン（クリックでモーダル開く） */}
+      <FormButton
+        label="削除"
+        onClick={() => setDeleteConfirmOpen(true)}
+        disabled={loading}
+        color="red"
       />
-
-      <label className="block mb-2 font-semibold">カテゴリ</label>
-      <div className="mb-6 flex flex-wrap gap-2">
-        {categories.map((cat) => (
-          <button
-            key={cat.id}
-            type="button"
-            onClick={() => toggleCategory(cat.id)}
-            className={`px-3 py-1 rounded border ${
-              selectedCategoryIds.includes(cat.id)
-                ? "bg-blue-500 text-white border-blue-500"
-                : "hover:bg-gray-200"
-            }`}
-          >
-            {cat.name}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex gap-4">
-        <button
-          onClick={handleUpdate}
-          disabled={loading}
-          className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
-        >
-          保存
-        </button>
-        <button
-          onClick={() => setDeleteConfirmOpen(true)}
-          disabled={loading}
-          className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
-        >
-          削除
-        </button>
-      </div>
-
-      {/* 削除確認モーダル */}
       {deleteConfirmOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded shadow-md max-w-sm w-full">
-            <p className="mb-4">本当にこの投稿を削除しますか？</p>
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={() => setDeleteConfirmOpen(false)}
-                className="px-4 py-2 border rounded hover:bg-gray-100"
-              >
-                キャンセル
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={loading}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
-              >
-                削除する
-              </button>
-            </div>
-          </div>
-        </div>
+        // モーダル本体
+        <DeleteConfirmModal
+          open={deleteConfirmOpen}
+          onClose={() => setDeleteConfirmOpen(false)}
+          onDelete={handleDelete}
+          loading={loading}
+        />
       )}
-    </main>
+    </div>
   );
 }
