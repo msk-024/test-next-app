@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation"; // useParamsをインポート
-import { MicroCmsPost } from "@/app/_types/MicroCmsPost";
+import { MicroCmsPost } from "@/app/_types/microCms/MicroCmsPost";
 import Image from "next/image";
 
 export default function Article() {

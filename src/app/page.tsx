@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 import classes from "@/app/_styles/sass/Detail.module.scss";
 import { PostPage } from "@/app/_components/PostPage";
 import { ButtonGroup } from "@/app/_components/ButtonGroup";
-import { MicroCmsPost, Post, convertToPost } from "@/app/_types/MicroCmsPost";
+import {
+  MicroCmsPost,
+  Post,
+  convertToPost,
+} from "@/app/_types/microCms/MicroCmsPost";
 
 export default function HomePage() {
   const [posts, setPosts] = useState<Post[]>([]);

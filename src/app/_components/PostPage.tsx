@@ -2,7 +2,7 @@
 
 import { MainPost } from "@/app/_components/MainPost";
 import { PageTitle } from "@/app/_components/PageTitle";
-import { Post } from "@/app/_types/MicroCmsPost";
+import { Post } from "@/app/_types/AdminPost";
 
 interface PostPageProps {
   posts: Post[];

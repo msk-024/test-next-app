@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { Post } from "@/app/_types/MicroCmsPost";
+import { Post } from "@/app/_types/microCms/MicroCmsPost";
 
 export async function GET() {
   try {
