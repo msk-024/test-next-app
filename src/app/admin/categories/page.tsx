@@ -1,15 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { PageTitle } from "@/src/app/_components/PageTitle";
-import { MicroCmsPost } from "@/src/app/_types/MicroCmsPost";
-import { MicroCmsCategory } from "@/src/app/_types/MicroCmsCategory";
-import { CategoryPost } from "@/src/app/admin/categories/_components/CategoryPost";
+import { PageTitle } from "@/app/_components/PageTitle";
+import { Post, Category } from "@/app/_types/AdminPost";
+import { CategoryPost } from "./_components/CategoryPost";
 
 export const CategoryPage: React.FC = () => {
-  const [categories, setCategories] = useState<MicroCmsCategory[]>([]);
-  const [categoryPosts, setCategoryPosts] = useState<
-    Map<string, MicroCmsPost[]>
-  >(new Map());
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoryPosts, setCategoryPosts] = useState<Map<number, Post[]>>(
+    new Map()
+  );
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -20,15 +19,15 @@ export const CategoryPage: React.FC = () => {
     const fetchPosts = async () => {
       const res = await fetch("/api/posts");
       const { posts } = await res.json(); // 記事データを取得
-      const categoryMap = new Map<string, MicroCmsPost[]>();
+      const categoryMap = new Map<number, Post[]>();
 
-      posts.forEach((post: MicroCmsPost) => {
+      posts.forEach((post: Post) => {
         post.postCategories.forEach((postCategory) => {
-          const categoryName = postCategory.category.name;
-          if (!categoryMap.has(categoryName)) {
-            categoryMap.set(categoryName, []);
+          const categoryId = postCategory.category.id;
+          if (!categoryMap.has(categoryId)) {
+            categoryMap.set(categoryId, []);
           }
-          categoryMap.get(categoryName)?.push(post);
+          categoryMap.get(categoryId)?.push(post);
         });
       });
 

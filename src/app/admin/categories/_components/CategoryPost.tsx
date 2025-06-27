@@ -1,15 +1,16 @@
-import { MicroCmsPost } from "@/src/app/_types/MicroCmsPost";
-import { MicroCmsCategory } from "@/src/app/_types/MicroCmsCategory";
+import { Post, Category } from "@/app/_types/AdminPost";
 import Link from "next/link";
 
 interface CategoryPostProps {
-  category: MicroCmsCategory;
-  categoryPosts: Map<string, MicroCmsPost[]>;
+  category: Category;
+  categoryPosts: Map<number, Post[]>;
 }
 
-export const CategoryPost: React.FC<CategoryPostProps> = ({ category, categoryPosts }) => {
-  const posts = categoryPosts.get(category.name) || []; // category.name で記事を取得
-
+export const CategoryPost: React.FC<CategoryPostProps> = ({
+  category,
+  categoryPosts,
+}) => {
+  const posts = categoryPosts.get(category.id) || [];
   return (
     <div className="mb-6">
       <h2 className="text-xl font-bold">{category.name}</h2>
@@ -22,7 +23,10 @@ export const CategoryPost: React.FC<CategoryPostProps> = ({ category, categoryPo
                   <p>{new Date(post.createdAt).toLocaleDateString()}</p>
                   <div className="flex">
                     {post.postCategories.map((postCategory, i) => (
-                      <p key={i} className="border border-blue-500 rounded text-blue-500 p-2 ml-1">
+                      <p
+                        key={i}
+                        className="border border-blue-500 rounded text-blue-500 p-2 ml-1"
+                      >
                         {postCategory.category.name}
                       </p>
                     ))}
