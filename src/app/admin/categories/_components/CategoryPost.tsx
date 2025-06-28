@@ -12,34 +12,40 @@ export const CategoryPost: React.FC<CategoryPostProps> = ({
 }) => {
   const posts = categoryPosts.get(category.id) || [];
   return (
-    <div className="mb-6">
-      <h2 className="text-xl font-bold">{category.name}</h2>
+    <div className="mb-6 border p-4 rounded">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-bold">{category.name}</h2>
+        <div className="flex gap-2">
+          <Link href={`/admin/categories/${category.id}/edit`}>
+            <button className="px-2 py-1 bg-yellow-500 text-white rounded">
+              編集
+            </button>
+          </Link>
+          <button
+            onClick={async () => {
+              const confirmed = confirm("本当に削除しますか？");
+              if (!confirmed) return;
+              const res = await fetch(`/api/categories/${category.id}`, {
+                method: "DELETE",
+              });
+              if (res.ok) {
+                alert("削除しました");
+                window.location.reload(); // または状態更新で再取得
+              } else {
+                alert("削除に失敗しました");
+              }
+            }}
+            className="px-2 py-1 bg-red-500 text-white rounded"
+          >
+            削除
+          </button>
+        </div>
+      </div>
+
+      {/* 記事表示（既存） */}
       <div className="mt-4">
         {posts.map((post) => (
-          <div key={post.id} className="border border-black mb-4 w-4/5 mx-auto">
-            <Link href={`/article/${post.id}`}>
-              <div className="p-5">
-                <div className="flex justify-between">
-                  <p>{new Date(post.createdAt).toLocaleDateString()}</p>
-                  <div className="flex">
-                    {post.postCategories.map((postCategory, i) => (
-                      <p
-                        key={i}
-                        className="border border-blue-500 rounded text-blue-500 p-2 ml-1"
-                      >
-                        {postCategory.category.name}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-                <h2 className="font-medium text-2xl mb-4">{post.title}</h2>
-                <div
-                  dangerouslySetInnerHTML={{ __html: post.content }}
-                  className="line-clamp-2"
-                />
-              </div>
-            </Link>
-          </div>
+          <div key={post.id}>{/* ... */}</div>
         ))}
       </div>
     </div>
