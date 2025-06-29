@@ -12,30 +12,20 @@ const CategoryPage: React.FC = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const res = await fetch("/api/categories"); // カテゴリーAPIの取得
+      const res = await fetch("/api/categories");
       const { categories } = await res.json();
       setCategories(categories);
-    };
-    const fetchPosts = async () => {
-      const res = await fetch("/api/posts");
-      const { posts } = await res.json(); // 記事データを取得
-      const categoryMap = new Map<number, Post[]>();
-
-      posts.forEach((post: Post) => {
-        post.postCategories.forEach((postCategory) => {
-          const categoryId = postCategory.category.id;
-          if (!categoryMap.has(categoryId)) {
-            categoryMap.set(categoryId, []);
-          }
-          categoryMap.get(categoryId)?.push(post);
+      const map = new Map<number, Post[]>();
+      categories.forEach((category: Category) => {
+        category.posts.forEach((cp) => {
+          if (!map.has(category.id)) map.set(category.id, []);
+          map.get(category.id)?.push(cp.post);
         });
       });
-
-      setCategoryPosts(categoryMap);
+      setCategoryPosts(map);
     };
 
     fetchCategories();
-    fetchPosts();
   }, []);
 
   return (

@@ -3,6 +3,9 @@ export interface Category {
   name: string;
   createdAt: string;
   updatedAt: string;
+  posts: {
+    post: Post;
+  }[];
 }
 
 export interface Post {

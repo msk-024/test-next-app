@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { PageTitle } from "@/app/_components/PageTitle";
 import { Post, Category } from "@/app/_types/AdminPost";
 import { ViewerCategoryPost } from "./_components/ViewerCategoryPost";
+import { ButtonGroup } from "../_components/ButtonGroup";
+import classes from "@/app/_styles/sass/Detail.module.scss";
 
 const CategoryPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -15,38 +17,34 @@ const CategoryPage: React.FC = () => {
     const fetchCategories = async () => {
       const res = await fetch("/api/categories");
       const { categories } = await res.json();
+      console.log("取得したカテゴリ一覧:", categories);
       setCategories(categories);
-    };
-
-    const fetchPosts = async () => {
-      const res = await fetch("/api/posts");
-      const { posts } = await res.json();
-
       const map = new Map<number, Post[]>();
-      posts.forEach((post: Post) => {
-        post.postCategories.forEach((pc) => {
-          const id = pc.category.id;
-          if (!map.has(id)) map.set(id, []);
-          map.get(id)?.push(post);
+      categories.forEach((category: Category) => {
+        category.posts.forEach((cp) => {
+          if (!map.has(category.id)) map.set(category.id, []);
+          map.get(category.id)?.push(cp.post);
         });
       });
       setCategoryPosts(map);
     };
 
     fetchCategories();
-    fetchPosts();
   }, []);
 
   return (
-    <div className="mx-auto w-4/5 pl-5">
-      <PageTitle ttl="カテゴリー一覧" />
-      {categories.map((category) => (
-        <ViewerCategoryPost
-          key={category.id}
-          category={category}
-          categoryPosts={categoryPosts}
-        />
-      ))}
+    <div className={classes.mainWrapper}>
+      <ButtonGroup />
+      <div className="p-8">
+        <PageTitle ttl="カテゴリー一覧" />
+        {categories.map((category) => (
+          <ViewerCategoryPost
+            key={category.id}
+            category={category}
+            categoryPosts={categoryPosts}
+          />
+        ))}{" "}
+      </div>
     </div>
   );
 };
