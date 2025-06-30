@@ -10,7 +10,7 @@ interface AdminLayoutProps {
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ posts }) => {
   return (
-    <div className="mx-auto w-4/5 pl-5">
+    <div className="mx-auto w-4/5 pl-5 bg-white text-black">
       <div className="flex justify-between items-center">
         <PageTitle ttl="記事一覧" />
         <Link href="/admin/posts/new/">

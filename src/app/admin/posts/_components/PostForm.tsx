@@ -43,7 +43,7 @@ export const PostForm: React.FC<PostFormProps> = ({
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
+          className="w-full p-2 border rounded mb-4 text-black"
         />
       </div>
 
@@ -53,7 +53,7 @@ export const PostForm: React.FC<PostFormProps> = ({
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={8}
-          className="w-full p-2 border rounded mb-4"
+          className="w-full p-2 border rounded mb-4 text-black"
         />
       </div>
 
@@ -63,7 +63,7 @@ export const PostForm: React.FC<PostFormProps> = ({
           type="text"
           value={thumbnailUrl}
           onChange={(e) => setThumbnailUrl(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
+          className="w-full p-2 border rounded mb-4 text-black"
         />
       </div>
 
@@ -78,7 +78,7 @@ export const PostForm: React.FC<PostFormProps> = ({
               className={`px-3 py-1 rounded border ${
                 selectedCategoryIds.includes(cat.id)
                   ? "bg-blue-500 text-white border-blue-500"
-                  : "hover:bg-gray-200"
+                  : "hover:bg-blue-400"
               }`}
             >
               {cat.name}

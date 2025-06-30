@@ -54,7 +54,7 @@ export default function EditCategoryPage() {
     <div className="p-6 max-w-4xl mx-auto">
       <PageTitle ttl="カテゴリ編集" />
       <input
-        className="border p-2 w-full mb-4"
+        className="border p-2 w-full mb-4 text-black"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
