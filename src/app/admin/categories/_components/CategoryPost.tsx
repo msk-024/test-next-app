@@ -16,7 +16,7 @@ export const CategoryPost: React.FC<CategoryPostProps> = ({
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold">{category.name}</h2>
         <div className="flex gap-2">
-          <Link href={`/admin/categories/${category.id}/edit`}>
+          <Link href={`/admin/categories/${category.id}`}>
             <button className="px-2 py-1 bg-yellow-500 text-white rounded">
               編集
             </button>

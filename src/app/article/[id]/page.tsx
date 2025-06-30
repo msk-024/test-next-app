@@ -47,22 +47,25 @@ export default function Article() {
   if (!post) {
     return <p>記事が見つかりません。</p>;
   }
-
+  console.log("post.thumbnailUrl:", post.thumbnailUrl);
   return (
     <div>
       <div className="max-w-full w-4/5 mx-auto">
         <div className="w-full my-8">
-          {post.thumbnailUrl ? (
+          {post.thumbnailUrl && (
             <Image
-              src={post.thumbnailUrl}
+              src={
+                post.thumbnailUrl?.startsWith("http") ||
+                post.thumbnailUrl?.startsWith("/")
+                  ? post.thumbnailUrl
+                  : `/images/no-image.jpg` // デフォルト画像を代用
+              }
               alt={post.title}
               width={800}
               height={450}
               className="w-full"
               priority
             />
-          ) : (
-            <div>サムネイルが読み込まれませんでした</div>
           )}
         </div>
 
