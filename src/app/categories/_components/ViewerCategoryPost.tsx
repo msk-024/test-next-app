@@ -15,7 +15,7 @@ export const ViewerCategoryPost: React.FC<ViewerCategoryPostProps> = ({
   return (
     <div className="mb-10" id={`category-${category.id}`}>
       <h2 className="text-xl text-blue-300 mb-6">{category.name}</h2>
-      <div className="space-y-4 mb-2">
+      <div className="space-y-4 mb-3">
         {posts.map((post) => (
           <Link key={post.id} href={`/article/${post.id}`}>
             <div className="mb-2 border border-gray-300 p-4 rounded hover:bg-gray-100">
