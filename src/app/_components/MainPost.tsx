@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Post } from "@/app/_types/AdminPost";
 
 interface MainPostProps {
+  // post: Post;
   post: Post;
 }
 
