@@ -26,7 +26,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         value={name}
         onChange={(e) => setName(e.target.value)}
         className="w-full border border-gray-300 px-4 py-2 rounded mb-4 text-black"
-        placeholder="例: 技術, お知らせ"
+        placeholder="例: お知らせ"
       />
 
       {errorMessage && (

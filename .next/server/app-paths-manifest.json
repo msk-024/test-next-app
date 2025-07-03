@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "/_not-found/page": "app/_not-found/page.js",
   "/page": "app/page.js",
   "/api/admin/posts/route": "app/api/admin/posts/route.js",
@@ -15,8 +14,4 @@
   "/admin/posts/page": "app/admin/posts/page.js",
   "/article/[id]/page": "app/article/[id]/page.js",
   "/api/admin/posts/[id]/route": "app/api/admin/posts/[id]/route.js"
-=======
-  "/page": "app/page.js",
-  "/article/[id]/page": "app/article/[id]/page.js"
->>>>>>> main
 }

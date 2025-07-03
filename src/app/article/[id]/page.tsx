@@ -61,7 +61,7 @@ export default function Article() {
                   : `/images/no-image.jpg` // デフォルト画像を代用
               }
               alt={post.title}
-              width={800}
+              width={600}
               height={450}
               className="w-full"
               priority

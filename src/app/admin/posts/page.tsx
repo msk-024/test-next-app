@@ -14,7 +14,7 @@ export default function AdminPage() {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/posts`,
-          { cache: "no-store" } // ✅ キャッシュを回避（重要）
+          { cache: "no-store" } // キャッシュ回避
         );
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);

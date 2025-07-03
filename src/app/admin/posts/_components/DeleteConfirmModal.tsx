@@ -13,7 +13,7 @@ export const DeleteConfirmModal: React.FC<Props> = ({
   onDelete,
   loading,
 }) => {
-  if (!open) return null; // モーダルが非表示のときは描画しない
+  if (!open) return null; // モーダルが非表示のとき出ない
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">

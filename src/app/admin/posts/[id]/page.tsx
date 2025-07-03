@@ -167,7 +167,7 @@ export default function PostEditPage({ params }: Props) {
         color="red"
       />
       {deleteConfirmOpen && (
-        // モーダル本体
+        // モーダル
         <DeleteConfirmModal
           open={deleteConfirmOpen}
           onClose={() => setDeleteConfirmOpen(false)}
