@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Link from "next/link";
+import { AdminButtonGroups } from "./_components/AdminButtonGroups";
 
 export default function AdminPage() {
   const { data: session, status } = useSession();
@@ -25,29 +25,8 @@ export default function AdminPage() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">管理者ダッシュボード</h1>
-      <ul className="space-y-2">
-        <li>
-          <Link href="/admin/posts" className="text-blue-600 hover:underline">
-            投稿一覧
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/admin/posts/new"
-            className="text-blue-600 hover:underline"
-          >
-            新規投稿
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/admin/categories"
-            className="text-blue-600 hover:underline"
-          >
-            カテゴリ管理
-          </Link>
-        </li>
-      </ul>
+      <p className="font-bold mb-4">ようこそ、{session?.user?.email} さん</p>
+      <AdminButtonGroups />
       <button
         onClick={handleLogout}
         className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"

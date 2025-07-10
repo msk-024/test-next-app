@@ -43,7 +43,7 @@ export default function NewCategoryPage() {
         <label className="block mb-2 font-semibold">カテゴリ名</label>
         <input
           type="text"
-          className="border p-2 w-full"
+          className="border p-2 w-full text-black"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="例：JavaScript"

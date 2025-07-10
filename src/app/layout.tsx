@@ -1,7 +1,7 @@
-import React from "react";
 import type { Metadata } from "next";
-import "@/app/_styles/globals.css";
+import { SessionWrapper } from "@/app/_components/SessionWrap";
 import { Header } from "@/app/_components/Header";
+import "@/app/_styles/globals.css";
 
 export const metadata: Metadata = {
   title: "Next-Blog",
@@ -16,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body>
-        <Header />
-        <main>{children}</main>
+        <SessionWrapper>
+          <Header />
+          <main>{children}</main>
+        </SessionWrapper>
       </body>
     </html>
   );

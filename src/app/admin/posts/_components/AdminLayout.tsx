@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { MainPost } from "@/app/_components/MainPost";
+import { PostItem } from "./PostItem";
 import { PageTitle } from "@/app/_components/PageTitle";
 import { Post } from "@/app/_types/AdminPost";
 
@@ -20,7 +20,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ posts }) => {
         </Link>
       </div>
       {posts.map((post) => (
-        <MainPost key={post.id} post={post} />
+        <PostItem key={post.id} post={post} />
       ))}
     </div>
   );

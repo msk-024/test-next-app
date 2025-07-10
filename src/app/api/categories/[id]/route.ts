@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma"; // ← あなたの構成に応じて調整
+import { prisma } from "@/lib/prisma";
 
+// GETカテゴリ詳細取得
 export async function GET(
   req: Request,
   { params }: { params: { id: string } }
@@ -19,4 +20,30 @@ export async function GET(
   }
 
   return NextResponse.json({ category });
+}
+
+// DELETEカテゴリ削除
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const categoryId = Number(params.id);
+
+    await prisma.postCategory.deleteMany({
+      where: { categoryId },
+    });
+
+    await prisma.category.delete({
+      where: { id: categoryId },
+    });
+
+    return NextResponse.json({ message: "削除成功" });
+  } catch (error) {
+    console.error("削除エラー:", error);
+    return NextResponse.json(
+      { message: "削除に失敗しました" },
+      { status: 500 }
+    );
+  }
 }

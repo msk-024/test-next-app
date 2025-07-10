@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+// 取得
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -28,39 +29,25 @@ export async function GET(
   }
 }
 
-// 修正前
-// import { NextRequest, NextResponse } from "next/server";
-// import { prisma } from "@/lib/prisma";
+// 削除
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const id = Number(params.id);
 
-// export const GET = async (
-//   request: NextRequest,
-//   context: { params: { id: string } }
-// ) => {
-//   const { params } = await context;
-//   const { id } = params;
+  try {
+    await prisma.postCategory.deleteMany({
+      where: { postId: id },
+    });
 
-//   try {
-//     const post = await prisma.post.findUnique({
-//       where: {
-//         id: parseInt(id),
-//       },
-//       include: {
-//         postCategories: {
-//           include: {
-//             category: {
-//               select: {
-//                 id: true,
-//                 name: true,
-//               },
-//             },
-//           },
-//         },
-//       },
-//     });
-//     return NextResponse.json({ status: "OK", post: post }, { status: 200 });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       return NextResponse.json({ status: error.message }, { status: 400 });
-//     }
-//   }
-// };
+    await prisma.post.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ message: "削除成功" });
+  } catch (err) {
+    console.error("削除失敗:", err);
+    return NextResponse.json({ message: "削除失敗" }, { status: 500 });
+  }
+}

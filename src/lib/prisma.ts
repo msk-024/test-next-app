@@ -1,4 +1,3 @@
-// Prismaクライアントのインスタンスを作成し、利用
 import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
