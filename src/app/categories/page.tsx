@@ -35,26 +35,28 @@ const CategoryPage: React.FC = () => {
   return (
     <div className={classes.mainWrapper}>
       <ButtonGroup />
-      <div className="mx-auto">
-        <PageTitle ttl="カテゴリー一覧" />
-        <div className="flex flex-wrap gap-2 my-4">
+      <div className="bg-white flex-auto">
+        <div className="w-4/5 m-auto text-black">
+          <PageTitle ttl="カテゴリー一覧" />
+          <div className="flex flex-wrap gap-2 my-4">
+            {categories.map((category) => (
+              <a
+                key={category.id}
+                href={`#category-${category.id}`}
+                className="bg-blue-100 text-blue-700 px-3 py-1 rounded hover:bg-blue-200"
+              >
+                {category.name}
+              </a>
+            ))}
+          </div>
           {categories.map((category) => (
-            <a
+            <ViewerCategoryPost
               key={category.id}
-              href={`#category-${category.id}`}
-              className="bg-blue-100 text-blue-700 px-3 py-1 rounded hover:bg-blue-200"
-            >
-              {category.name}
-            </a>
-          ))}
+              category={category}
+              categoryPosts={categoryPosts}
+            />
+          ))}{" "}
         </div>
-        {categories.map((category) => (
-          <ViewerCategoryPost
-            key={category.id}
-            category={category}
-            categoryPosts={categoryPosts}
-          />
-        ))}{" "}
       </div>
     </div>
   );

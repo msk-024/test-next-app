@@ -1,11 +1,13 @@
 {
-  "/admin/posts/[id]/page": "app/admin/posts/[id]/page.js",
   "/page": "app/page.js",
   "/api/admin/posts/route": "app/api/admin/posts/route.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/contact/page": "app/contact/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/admin/page": "app/admin/page.js",
-  "/admin/posts/page": "app/admin/posts/page.js",
-  "/api/admin/posts/[id]/route": "app/api/admin/posts/[id]/route.js",
-  "/api/admin/categories/route": "app/api/admin/categories/route.js",
-  "/_not-found/page": "app/_not-found/page.js"
+  "/login/page": "app/login/page.js",
+  "/categories/page": "app/categories/page.js",
+  "/api/categories/route": "app/api/categories/route.js",
+  "/article/[id]/page": "app/article/[id]/page.js",
+  "/api/admin/posts/[id]/route": "app/api/admin/posts/[id]/route.js"
 }
