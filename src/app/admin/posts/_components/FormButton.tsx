@@ -7,6 +7,7 @@ interface FormButtonProps {
   onClick: () => void;
   disabled?: boolean;
   color?: "blue" | "green" | "red";
+  className?: string;
 }
 
 export const FormButton: React.FC<FormButtonProps> = ({
@@ -14,6 +15,7 @@ export const FormButton: React.FC<FormButtonProps> = ({
   onClick,
   disabled = false,
   color = "blue",
+  className = "",
 }) => {
   const baseClass =
     "px-6 py-2 rounded text-white disabled:opacity-50 transition";
@@ -29,7 +31,7 @@ export const FormButton: React.FC<FormButtonProps> = ({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`${baseClass} ${colorClass}`}
+      className={`${baseClass} ${colorClass} ${className}`}
     >
       {label}
     </button>

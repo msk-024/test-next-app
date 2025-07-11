@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react"; // ←Next.js15以降
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Category, Post } from "@/app/_types/AdminPost";
@@ -9,12 +10,12 @@ import { FormButton } from "../_components/FormButton";
 import { DeleteConfirmModal } from "../_components/DeleteConfirmModal";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default function PostEditPage({ params }: Props) {
   const router = useRouter();
-  const postId = params.id;
+  const { id: postId } = use(params);
 
   const [post, setPost] = useState<Post | null>(null);
   const [title, setTitle] = useState("");
@@ -43,13 +44,13 @@ export default function PostEditPage({ params }: Props) {
           throw new Error("カテゴリ一覧の取得に失敗しました。");
         const categoriesData = await categoriesRes.json();
 
-        setPost(postData.posts[0]);
-        setTitle(postData.posts[0].title);
-        setContent(postData.posts[0].content);
-        setThumbnailUrl(postData.posts[0].thumbnailUrl || "");
+        setPost(postData.post);
+        setTitle(postData.post.title);
+        setContent(postData.post.content);
+        setThumbnailUrl(postData.post.thumbnailUrl || "");
         setCategories(categoriesData.categories);
 
-        const selectedIds = postData.posts[0].postCategories.map(
+        const selectedIds = postData.post.postCategories.map(
           (pc: { category: Category }) => pc.category.id
         );
         setSelectedCategoryIds(selectedIds);
@@ -153,18 +154,13 @@ export default function PostEditPage({ params }: Props) {
         loading={loading}
         errorMessage={errorMessage}
       />
-      <FormButton
-        label="保存"
-        onClick={handleUpdate}
-        disabled={loading}
-        color="green"
-      />
       {/* 削除ボタン（クリックでモーダル開く） */}
       <FormButton
         label="削除"
         onClick={() => setDeleteConfirmOpen(true)}
         disabled={loading}
         color="red"
+        className="mt-4"
       />
       {deleteConfirmOpen && (
         // モーダル
