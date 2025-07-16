@@ -15,7 +15,7 @@ export default function EditCategoryPage() {
     const fetchCategory = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/categories/${id}`);
+        const res = await fetch(`/api/admin/categories/${id}`);
         if (!res.ok) throw new Error("取得失敗");
         const data = await res.json();
         setName(data.category.name);
