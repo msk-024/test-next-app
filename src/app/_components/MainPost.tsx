@@ -14,7 +14,7 @@ export const MainPost: React.FC<MainPostProps> = ({ post }) => {
           <div className="flex justify-between">
             <p>{post.createdAt.slice(0, 10)}</p>
             <div className="flex">
-              {post.postCategories?.map((postCategory, i) => (
+              {post.postCategories.map((postCategory, i) => (
                 <p
                   key={i}
                   className="border border-blue-500 rounded text-blue-500 p-2 ml-1"

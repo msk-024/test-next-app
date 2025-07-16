@@ -19,7 +19,7 @@ export default function Article() {
       setLoading(true);
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/posts/${id}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${id}`
         );
 
         if (!res.ok) throw new Error("投稿の取得に失敗しました");
