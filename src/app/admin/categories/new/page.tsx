@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageTitle } from "@/app/_components/PageTitle";
+import { CategoryForm } from "../_components/CategoryForm";
 
 export default function NewCategoryPage() {
   const [name, setName] = useState("");
@@ -40,25 +41,14 @@ export default function NewCategoryPage() {
     <div className="p-6 max-w-xl mx-auto">
       <PageTitle ttl="新規カテゴリー作成" />
       <div className="mb-4">
-        <label className="block mb-2 font-semibold">カテゴリ名</label>
-        <input
-          type="text"
-          className="border p-2 w-full text-black"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="例：JavaScript"
+        <CategoryForm
+        name={name}
+        setName={setName}
+        onSubmit={handleSubmit}
+        loading={loading}
+        errorMessage={errorMessage}
         />
       </div>
-
-      {errorMessage && <p className="text-red-600">{errorMessage}</p>}
-
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        {loading ? "作成中..." : "作成する"}
-      </button>
     </div>
   );
 }

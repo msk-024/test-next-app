@@ -18,11 +18,11 @@ export const DeleteConfirmModal: React.FC<Props> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded shadow-md max-w-sm w-full">
-        <p className="mb-4">本当にこの投稿を削除しますか？</p>
+        <p className="mb-4 text-blue-800">本当にこの投稿を削除しますか？</p>
         <div className="flex justify-end gap-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 border rounded hover:bg-gray-100"
+            className="px-4 py-2 border border-green-500 text-green-500 rounded hover:bg-gray-100"
           >
             キャンセル
           </button>

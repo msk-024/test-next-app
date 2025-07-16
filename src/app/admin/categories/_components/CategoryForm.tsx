@@ -7,7 +7,6 @@ interface CategoryFormProps {
   onSubmit: () => void;
   loading: boolean;
   errorMessage?: string;
-  submitLabel?: string; // default: "作成"
 }
 
 export const CategoryForm: React.FC<CategoryFormProps> = ({
@@ -16,7 +15,6 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   onSubmit,
   loading,
   errorMessage,
-  submitLabel = "作成",
 }) => {
   return (
     <div>
@@ -26,7 +24,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         value={name}
         onChange={(e) => setName(e.target.value)}
         className="w-full border border-gray-300 px-4 py-2 rounded mb-4 text-black"
-        placeholder="例: お知らせ"
+        placeholder="例: JavaScript"
       />
 
       {errorMessage && (
@@ -38,7 +36,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         disabled={loading}
         className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
       >
-        {submitLabel}
+        {loading ? "作成中..." : "作成する"}
       </button>
     </div>
   );
