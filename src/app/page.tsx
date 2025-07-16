@@ -12,7 +12,7 @@ export default function HomePage() {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/posts`
+          `/api/posts`
         );
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 

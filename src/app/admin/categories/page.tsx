@@ -15,7 +15,7 @@ const CategoryPage: React.FC = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const res = await fetch("/api/categories");
+      const res = await fetch("/api/admin/categories");
       const { categories } = await res.json();
       setCategories(categories);
       const map = new Map<number, Post[]>();

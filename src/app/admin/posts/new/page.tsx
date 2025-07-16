@@ -22,7 +22,7 @@ export default function NewPostsPage() {
     const fetchCategories = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/categories`
+          `/api/admin/categories`
         );
         if (!res.ok) throw new Error("カテゴリー一覧の取得に失敗しました。");
         const data = await res.json();
@@ -63,7 +63,7 @@ export default function NewPostsPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/posts`,
+        `/api/admin/posts`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

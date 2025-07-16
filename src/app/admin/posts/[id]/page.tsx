@@ -31,15 +31,12 @@ export default function PostEditPage({ params }: Props) {
     const fetchPostAndCategories = async () => {
       setLoading(true);
       try {
-        const postRes = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/posts/${postId}`
+        const postRes = await fetch(`/api/admin/posts/${postId}`
         );
         if (!postRes.ok) throw new Error("投稿データの取得に失敗しました。");
         const postData = await postRes.json();
 
-        const categoriesRes = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/categories`
-        );
+        const categoriesRes = await fetch(`/api/admin/categories`);
         if (!categoriesRes.ok)
           throw new Error("カテゴリ一覧の取得に失敗しました。");
         const categoriesData = await categoriesRes.json();
@@ -86,8 +83,7 @@ export default function PostEditPage({ params }: Props) {
     setErrorMessage("");
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/posts/${postId}`,
+      const res = await fetch(`/api/admin/posts/${postId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -113,7 +109,7 @@ export default function PostEditPage({ params }: Props) {
     setLoading(true);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/posts/${postId}`,
+        `/api/admin/posts/${postId}`,
         {
           method: "DELETE",
         }

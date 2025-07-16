@@ -4,6 +4,7 @@
 import React from "react";
 import { Category } from "@/app/_types/AdminPost";
 import { FormButton } from "./FormButton";
+
 interface PostFormProps {
   title: string;
   setTitle: (value: string) => void;
@@ -35,6 +36,8 @@ export const PostForm: React.FC<PostFormProps> = ({
   errorMessage,
   submitLabel = "保存",
 }) => {
+  
+
   return (
     <div>
       <div>
