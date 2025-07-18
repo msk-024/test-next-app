@@ -1,37 +1,24 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { Post } from "@/app/_types/microCms/MicroCmsPost";
 
 export async function GET() {
   try {
     const posts = await prisma.post.findMany({
+      orderBy: { createdAt: "desc" },
       include: {
         postCategories: {
           include: {
-            category: {
-              select: { id: true, name: true },
-            },
+            category: true,
           },
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
     });
 
-    const formattedPosts: Post[] = posts.map((post) => ({
-      id: post.id,
-      title: post.title,
-      content: post.content,
-      createdAt: post.createdAt.toISOString(),
-      categories: post.postCategories.map((c) => c.category.name),
-      thumbnailUrl: post.thumbnailUrl,
-    }));
-
-    return NextResponse.json({ status: "OK", posts: formattedPosts });
+    return NextResponse.json({ posts });
   } catch (error) {
+    console.error("投稿取得エラー:", error);
     return NextResponse.json(
-      { status: "ERROR", message: (error as Error).message },
+      { message: "投稿の取得に失敗しました" },
       { status: 500 }
     );
   }

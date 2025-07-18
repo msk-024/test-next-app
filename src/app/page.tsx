@@ -11,8 +11,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch(
-          `/api/posts`
+        const res = await fetch(`/api/posts`
         );
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 

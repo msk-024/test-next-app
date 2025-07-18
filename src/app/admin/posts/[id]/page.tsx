@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react"; // ←Next.js15以降
+import { use } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Category, Post } from "@/app/_types/AdminPost";
@@ -8,6 +8,7 @@ import { PageTitle } from "@/app/_components/PageTitle";
 import { PostForm } from "../_components/PostForm";
 import { FormButton } from "../_components/FormButton";
 import { DeleteConfirmModal } from "../_components/DeleteConfirmModal";
+import { useCategories } from "@/hooks/useCategories";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -16,36 +17,28 @@ interface Props {
 export default function PostEditPage({ params }: Props) {
   const router = useRouter();
   const { id: postId } = use(params);
-
+  const { categories, loading: catLoading, error: catError } = useCategories();
   const [post, setPost] = useState<Post | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
-  const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   useEffect(() => {
-    const fetchPostAndCategories = async () => {
+    const fetchPost = async () => {
       setLoading(true);
       try {
-        const postRes = await fetch(`/api/admin/posts/${postId}`
-        );
+        const postRes = await fetch(`/api/admin/posts/${postId}`);
         if (!postRes.ok) throw new Error("投稿データの取得に失敗しました。");
         const postData = await postRes.json();
-
-        const categoriesRes = await fetch(`/api/admin/categories`);
-        if (!categoriesRes.ok)
-          throw new Error("カテゴリ一覧の取得に失敗しました。");
-        const categoriesData = await categoriesRes.json();
 
         setPost(postData.post);
         setTitle(postData.post.title);
         setContent(postData.post.content);
         setThumbnailUrl(postData.post.thumbnailUrl || "");
-        setCategories(categoriesData.categories);
 
         const selectedIds = postData.post.postCategories.map(
           (pc: { category: Category }) => pc.category.id
@@ -58,43 +51,33 @@ export default function PostEditPage({ params }: Props) {
       }
     };
 
-    fetchPostAndCategories();
+    fetchPost();
   }, [postId]);
 
   const toggleCategory = (id: number) => {
-    if (selectedCategoryIds.includes(id)) {
-      setSelectedCategoryIds(selectedCategoryIds.filter((c) => c !== id));
-    } else {
-      setSelectedCategoryIds([...selectedCategoryIds, id]);
-    }
+    setSelectedCategoryIds((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
   };
 
   const handleUpdate = async () => {
-    if (!title.trim()) {
-      setErrorMessage("タイトルを入力してください。");
-      return;
-    }
-    if (!content.trim()) {
-      setErrorMessage("本文を入力してください。");
-      return;
-    }
+    if (!title.trim()) return setErrorMessage("タイトルを入力してください。");
+    if (!content.trim()) return setErrorMessage("本文を入力してください。");
 
     setLoading(true);
     setErrorMessage("");
 
     try {
-      const res = await fetch(`/api/admin/posts/${postId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title,
-            content,
-            thumbnailUrl,
-            categories: selectedCategoryIds.map((id) => ({ id })),
-          }),
-        }
-      );
+      const res = await fetch(`/api/admin/posts/${postId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          content,
+          thumbnailUrl,
+          categories: selectedCategoryIds.map((id) => ({ id })),
+        }),
+      });
       if (!res.ok) throw new Error("更新に失敗しました。");
       alert("投稿を更新しました。");
       router.push("/admin/posts");
@@ -108,12 +91,9 @@ export default function PostEditPage({ params }: Props) {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `/api/admin/posts/${postId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const res = await fetch(`/api/admin/posts/${postId}`, {
+        method: "DELETE",
+      });
       if (!res.ok) throw new Error("削除に失敗しました。");
       alert("投稿を削除しました。");
       router.push("/admin/posts");
@@ -125,11 +105,11 @@ export default function PostEditPage({ params }: Props) {
     }
   };
 
-  if (loading && !post) {
+  if ((loading || catLoading) && !post) {
     return <p className="p-6">読み込み中...</p>;
   }
 
-  if (!post) {
+  if (!post || catError) {
     return <p className="p-6">投稿が見つかりません。</p>;
   }
 
@@ -150,7 +130,7 @@ export default function PostEditPage({ params }: Props) {
         loading={loading}
         errorMessage={errorMessage}
       />
-      {/* 削除ボタン（クリックでモーダル開く） */}
+
       <FormButton
         label="削除"
         onClick={() => setDeleteConfirmOpen(true)}
@@ -158,8 +138,8 @@ export default function PostEditPage({ params }: Props) {
         color="red"
         className="mt-4"
       />
+
       {deleteConfirmOpen && (
-        // モーダル
         <DeleteConfirmModal
           open={deleteConfirmOpen}
           onClose={() => setDeleteConfirmOpen(false)}

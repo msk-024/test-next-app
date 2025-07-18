@@ -7,6 +7,13 @@ export async function GET(request: NextRequest) {
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        posts: {
+          include: {
+            post: true,
+          },
+        },
+      },
     });
     return NextResponse.json({ status: "OK", categories });
   } catch (error) {
