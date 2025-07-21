@@ -1,10 +1,34 @@
-import React from "react";
-import { PostPage } from "@/src/app/_components/PostPage";
+"use client";
+
+import { useEffect, useState } from "react";
+import classes from "@/app/_styles/sass/Detail.module.scss";
+import { PostPage } from "@/app/_components/PostPage";
+import { ButtonGroup } from "@/app/_components/ButtonGroup";
+import { Post } from "@/app/_types/AdminPost";
 
 export default function HomePage() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch(`/api/posts`
+        );
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+        const data = await res.json();
+        setPosts(data.posts);
+      } catch (error) {
+        console.error("記事取得に失敗しました", error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
   return (
-    <div>
-      <PostPage />
+    <div className={classes.mainWrapper}>
+      <ButtonGroup />
+      <PostPage posts={posts} />
     </div>
   );
 }

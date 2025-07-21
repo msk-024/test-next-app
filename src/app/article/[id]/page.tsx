@@ -1,40 +1,39 @@
 "use client";
+
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation"; // useParamsをインポート
-import { MicroCmsPost } from "@/src/app/_types/MicroCmsPost";
+import { useParams } from "next/navigation";
+import { Post } from "@/app/_types/AdminPost";
 import Image from "next/image";
 
 export default function Article() {
   const params = useParams();
   const id = params?.id as string | undefined;
 
-  const [post, setPost] = useState<MicroCmsPost | null>(null);
+  const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetcher = async () => {
+    if (!id) return;
+
+    const fetchPost = async () => {
       setLoading(true);
-      const res = await fetch(
-        `https://9samplena9.microcms.io/api/v1/blog-next9/${id}`,
-        {
-          headers: {
-            "X-MICROCMS-API-KEY": process.env
-              .NEXT_PUBLIC_MICROCMS_API_KEY as string,
-          },
-        }
-      );
+      try {
+        const res = await fetch(
+          `/api/posts/${id}`
+        );
 
-      const data = await res.json();
+        if (!res.ok) throw new Error("投稿の取得に失敗しました");
 
-      // console.log("Fetched data:", data); // データ全体を表示
-      // console.log("Thumbnail:", data.thumbnail); // サムネイル情報を確認
-      // console.log("Thumbnail URL:", data.thumbnail?.url); // URLを確認
-
-      setPost(data);
-      setLoading(false);
+        const data = await res.json();
+        setPost(data.post);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetcher();
+    fetchPost();
   }, [id]);
 
   if (!id) {
@@ -48,49 +47,49 @@ export default function Article() {
   if (!post) {
     return <p>記事が見つかりません。</p>;
   }
-
-  const thumbnailUrl = post.thumbnail?.url;
-  // console.log("Thumbnail URL:", post.thumbnailUrl?.url);
-
+  console.log("post.thumbnailUrl:", post.thumbnailUrl);
   return (
     <div>
-      <main>
-        <div className="max-w-full w-4/5 mx-auto">
-          <div className="w-full my-8">
-            {thumbnailUrl ? (
-              <Image
-                src={thumbnailUrl}
-                alt={post.title}
-                width={800}
-                height={450}
-                className="w-full"
-                priority
-              />
-            ) : (
-              <div>サムネイルが読み込まれませんでした</div>
-            )}
-          </div>
-          <div className="flex justify-between">
-            <p className="text-xs">
-              {new Date(post.createdAt).toLocaleDateString()}
-            </p>
-            <div className="flex">
-              {post.categories.map((category) => (
-                <p
-                  key={category.id}
-                  className="border border-blue-500 rounded text-blue-500 p-2 ml-1"
-                >
-                  {category.name}
-                </p>
-              ))}
-            </div>
-          </div>
-          <div className="my-5">
-            <h2 className="font-medium text-2xl mb-4">{post.title}</h2>
-            <div dangerouslySetInnerHTML={{ __html: post.content }} />
+      <div className="max-w-full w-4/5 mx-auto">
+        <div className="w-full my-8">
+          {post.thumbnailUrl && (
+            <Image
+              src={
+                post.thumbnailUrl?.startsWith("http") ||
+                post.thumbnailUrl?.startsWith("/")
+                  ? post.thumbnailUrl
+                  : `/images/no-image.jpg` // デフォルト画像を代用
+              }
+              alt={post.title}
+              width={600}
+              height={450}
+              className="w-full"
+              priority
+            />
+          )}
+        </div>
+
+        <div className="flex justify-between">
+          <p className="text-xs">
+            {new Date(post.createdAt).toLocaleDateString()}
+          </p>
+          <div className="flex">
+            {post.postCategories.map((pc, i) => (
+              <p
+                key={i}
+                className="border border-blue-500 rounded text-blue-500 p-2 ml-1"
+              >
+                {pc.category.name}
+              </p>
+            ))}
           </div>
         </div>
-      </main>
+
+        <div className="my-5">
+          <h2 className="font-medium text-2xl mb-4">{post.title}</h2>
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        </div>
+      </div>
     </div>
   );
 }
