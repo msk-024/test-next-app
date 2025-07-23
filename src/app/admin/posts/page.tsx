@@ -5,18 +5,29 @@ import classes from "@/app/_styles/sass/Detail.module.scss";
 import { AdminLayout } from "./_components/AdminLayout";
 import { ButtonGroup } from "@/app/_components/ButtonGroup";
 import { Post } from "@/app/_types/AdminPost";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
+
 
 export default function AdminPage() {
   const [posts, setPosts] = useState<Post[]>([]);
-
+  const {token} =useSupabaseSession();
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        if (!token) return;  
         const res = await fetch(
           `/api/admin/posts`,
-          { cache: "no-store" } // キャッシュ回避ができる
-        );
-        if (!res.ok) {
+          { cache: "no-store",  // キャッシュ回避ができる
+            headers: {
+              'Content-Type':'application/json',
+              Authorization: token,
+            },
+      });
+      
+      const {posts} = await res.json();
+      setPosts([...posts]);
+
+      if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
 
@@ -28,7 +39,7 @@ export default function AdminPage() {
     };
 
     fetchPosts();
-  }, []);
+  }, [token]);
 
   return (
     <div className={classes.mainWrapper}>

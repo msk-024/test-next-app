@@ -56,7 +56,8 @@ export default function NewPostsPage() {
   };
 
   if (catLoading) return <p className="p-6">カテゴリ読み込み中...</p>;
-  if (catError) return <p className="p-6 text-red-500">カテゴリ取得に失敗しました</p>;
+  if (catError)
+    return <p className="p-6 text-red-500">カテゴリ取得に失敗しました</p>;
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
